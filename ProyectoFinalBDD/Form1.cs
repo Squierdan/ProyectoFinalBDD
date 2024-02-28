@@ -11,6 +11,8 @@ namespace ProyectoFinalBDD
         public Ventana1()
         {
             InitializeComponent();
+            btnGuardar.Click += new EventHandler(btnGuardar_Click);
+            btnIngresar.Click += new EventHandler(btnIngresar_Click);
             btnIngresar.Enabled = false;
         }
 
@@ -52,16 +54,27 @@ namespace ProyectoFinalBDD
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            // Agregar los datos ingresados al DataGridView
-            int n = dgvDatos.Rows.Add(); // Agrega una nueva fila
-            dgvDatos.Rows[n].Cells[0].Value = txtNombre.Text;
-            dgvDatos.Rows[n].Cells[1].Value = txtApellido.Text;
-            dgvDatos.Rows[n].Cells[2].Value = txtCorreo.Text;
-            dgvDatos.Rows[n].Cells[3].Value = txtCedula.Text;
+            // Asegurarse de que solo existan filas de nueva inserción antes de agregar un nuevo usuario
+            if (dgvDatos.Rows.Count == 0 || (dgvDatos.Rows.Count == 1 && dgvDatos.Rows[0].IsNewRow))
+            {
+                // Agregar los datos ingresados al DataGridView
+                int n = dgvDatos.Rows.Add(); // Agrega una nueva fila
+                dgvDatos.Rows[n].Cells[0].Value = txtNombre.Text;
+                dgvDatos.Rows[n].Cells[1].Value = txtApellido.Text;
+                dgvDatos.Rows[n].Cells[2].Value = txtCorreo.Text;
+                dgvDatos.Rows[n].Cells[3].Value = txtCedula.Text;
 
-            // Habilitar el botón de Ingresar al Sistema
-            datosIngresados = true;
-            btnIngresar.Enabled = true;
+                // Habilitar el botón de Ingresar al Sistema
+                datosIngresados = true;
+                btnIngresar.Enabled = true;
+
+                // Deshabilitar el botón btnGuardar para evitar más ingresos
+                btnGuardar.Enabled = false; // Esto deshabilitará el botón después de agregar un usuario
+            }
+            else
+            {
+                MessageBox.Show("Ya se ingresó un usuario. No se pueden ingresar más usuarios.");
+            }
         }
 
         private void btnIngresar_Click(object sender, EventArgs e)
